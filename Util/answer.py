@@ -8,51 +8,48 @@ class Answer:
     def __init__(
         self,
         file_path: str,
-        args: list[str] = [],
-        inputs: list[str] = None,
-        correct_file_name: str = "",
+        args: str = "",
+        inputs: str | None = None,
     ) -> None:
-        self.file_path: str = file_path
+        self.file_path = file_path.replace("\\", "/")
         self.code_txt: str = ""
         self.result_txt: str = ""
-        self.file_name: str = path.basename(self.file_path)
-        self.args: list[str] = args
-        self.inputs: list[str] = inputs
-        self.user: str = self.get_user_name()
-        self.file_list: list[str] = [self.file_name]
-        self.correct_file_name = correct_file_name
+        self.task_name: str = path.basename(self.file_path)
+        self.args = args.split()
+        self.inputs = inputs
+        self.file_list: list[str] = [self.task_name]
 
     def __str__(self) -> str:
         return (
             f"file_path : {self.file_path}\n"
             f"code_txt : {self.code_txt}\n"
             f"result_txt : {self.result_txt}\n"
-            f"name : {self.file_name}\n"
+            f"name : {self.task_name}\n"
             f"args : {self.args}\n"
             f"inputs : {self.inputs}\n"
         )
 
-    def prints(self) -> str:
-        return (
-            f"{' USER : ' + self.user + ' ':#^70}\n"
-            "\n"
-            f"FILE LIST : {self.file_list}\n"
-            "\n"
-            f"{' START CODE ':=^70}\n"
-            "\n"
-            f"{self.code_txt}\n"
-            f"{' FINISH CODE ':=^70}\n"
-            "\n"
-            f"{' RESULT ' + self.user + ' ':-^70}\n"
-            f"{self.result_txt}\n"
-        )
+    # def prints(self) -> str:
+    #     return (
+    #         f"{' USER : ' + self.user + ' ':#^70}\n"
+    #         "\n"
+    #         f"FILE LIST : {self.file_list}\n"
+    #         "\n"
+    #         f"{' START CODE ':=^70}\n"
+    #         "\n"
+    #         f"{self.code_txt}\n"
+    #         f"{' FINISH CODE ':=^70}\n"
+    #         "\n"
+    #         f"{' RESULT ' + self.user + ' ':-^70}\n"
+    #         f"{self.result_txt}\n"
+    #     )
 
-    def get_user_name(self):
-        for i in self.file_path.replace("\\", "/").split("/"):
-            if "@" in i:
-                return i.split("@")[0]
-        else:
-            return self.file_path
+    # def get_user_name(self):
+    #     for i in self.file_path.replace("\\", "/").split("/"):
+    #         if "@" in i:
+    #             return i.split("@")[0]
+    #     else:
+    #         return self.file_path
 
     def get_code(self):
         try:
@@ -69,9 +66,9 @@ class Answer:
             print(self.file_path, e)
 
     def execute(self):
-        if self.file_name.endswith(".jar"):
+        if self.task_name.endswith(".jar"):
             cmd = ["java", "-jar", self.file_path] + self.args
-        elif self.file_name.endswith(".java"):
+        elif self.task_name.endswith(".java"):
             cmd = ["java", self.file_path] + self.args
         else:
             self.result_txt = "cmd error"
@@ -116,7 +113,7 @@ def unpack_files(file_path, file_encoding):
             # print(text)
             texts += f"{' ' + path.basename(info.filename) + '' '':-^70}\n{text}\n\n"
             file_list.append(path.basename(info.filename))
-    return texts.strip() if texts != "" else "javaファイル無し", file_list
+    return texts.strip() if texts != "" else "対象ファイル無し", file_list
 
 
 if __name__ == "__main__":
@@ -127,10 +124,10 @@ if __name__ == "__main__":
     pprint(lst)
     with open("answers.txt", "w", encoding="utf-8") as f:
         for ans in lst:
-            test = Answer(ans, args=["test.txt"])
+            test = Answer(ans, args="test.txt")
             test.get_code()
             # print(test.code_txt)
             test.execute()
             # print(test.result_txt)
             # print(test, end="\n" * 5, file=f)
-            print(test.prints(), end="\n" * 10, file=f)
+            # print(test.prints(), end="\n" * 10, file=f)
