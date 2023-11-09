@@ -1,6 +1,6 @@
 /.venv/
 /tmp/
-/__pycache__/
+__pycache__/
 *.txt
 !requirements.txt
-/.mypy_cache/
+.mypy_cache/
