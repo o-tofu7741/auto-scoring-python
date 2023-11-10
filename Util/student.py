@@ -1,13 +1,13 @@
 import glob
 from os import path
 
-from answer import Answer
+from Util.answer import Answer
 
 
 class Student:
     def __init__(self, student_dir_path: str, tasks: list[dict[str, str]]) -> None:
         self.dir_path = student_dir_path.replace("\\", "/")
-        self.user = path.basename(self.dir_path)
+        self.user = path.basename(path.dirname(self.dir_path)).split("@")[0]
         self.answers: list[Answer] = []
         self.tasks = tasks
         self.not_exists_tasks: list[str] = []
@@ -28,10 +28,11 @@ class Student:
             else:
                 self.not_exists_tasks.append(task["name"])
 
-    def collect_results(self):
+    def get_results(self):
+        self.set_answers()
         self.result += (
             f"{' USER : ' + self.user + ' ':#^70}\n\n"
-            f"左記の課題ファイル無し or 名前ミス : {' ,'.join(self.not_exists_tasks) if self.not_exists_tasks else 'ミスしているファイルはありません'}\n"
+            f"左記の課題ファイル無し or 名前ミス : {' ,'.join(self.not_exists_tasks) if self.not_exists_tasks else 'ミスしているファイルはありません'}\n\n"
         )
 
         for ans in self.answers:
@@ -41,9 +42,9 @@ class Student:
                 f"{' 課題 : ' + ans.task_name + ' ':=^70}\n\n"
                 f"FILE LIST : {ans.file_list}\n\n"
                 f"{' コード ':-^70}\n\n"
-                f"{ans.code_txt}\n"
-                f"{' 実行結果 ' + ans.task_name + ' ':~^70}\n"
-                f"{ans.result_txt}\n\n"
+                f"{ans.code_txt}\n\n"
+                f"{' 実行結果 ' + ans.task_name + ' ':~^70}\n\n"
+                f"{ans.result_txt}\n\n\n\n"
             )
 
 
@@ -53,5 +54,5 @@ if __name__ == "__main__":
         [{"name": "Expand.java"}, {"name": "Loop.java"}],
     )
     hoge.set_answers()
-    hoge.collect_results()
+    hoge.get_results()
     print(hoge.result)

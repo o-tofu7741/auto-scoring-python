@@ -103,7 +103,7 @@ def unpack_files(file_path, file_encoding):
                 # print(info.filename)
                 continue  # ディレクトリならスキップ
 
-            if not info.filename.endswith((".txt", ".java", ".c")):
+            if not info.filename.endswith((".java", ".c")):
                 # print(info.filename)
                 continue  # .txt 以外のファイルもスキップ
 
@@ -113,7 +113,7 @@ def unpack_files(file_path, file_encoding):
             # print(text)
             texts += f"{' ' + path.basename(info.filename) + '' '':-^70}\n{text}\n\n"
             file_list.append(path.basename(info.filename))
-    return texts.strip() if texts != "" else "対象ファイル無し", file_list
+    return texts.strip() if texts != "" else "javaファイル無し", file_list
 
 
 if __name__ == "__main__":

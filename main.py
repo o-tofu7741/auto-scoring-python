@@ -2,7 +2,7 @@ import json
 from os import path
 import glob
 
-from pprint import pprint
+from Util.student import Student
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
     while target_dir_path == "":
         try:
             print("採点対象フォルダの絶対パスを入力してください。例 : C:/hoge/huga")
-            tmp_dir_path = "/tmp"  # input()
+            tmp_dir_path = input()
             if not path.exists(tmp_dir_path):
                 raise Exception("入力されたパスは存在しません。")
             if not path.isdir(tmp_dir_path):
@@ -29,17 +29,16 @@ def main():
             settings = json.load(f)
     except Exception as e:
         print(e)
-    print(settings)
     student_dir_paths = glob.glob(path.join(target_dir_path, "**") + "/")
-    print(student_dir_paths)
-    students_file_paths: list[list[str]] = []
-    # students = list(map(lambda x: path.basename(path.dirname(x)), student_dir_paths))
-    print(settings["tasks"])
-    for student in glob.glob(path.join(target_dir_path, "**") + "/"):
-        students_file_paths.append(glob.glob(path.join(student, "*")))
-    pprint(students_file_paths)
-    for file_paths in students_file_paths:
-        print(file_paths)
+    students: list[Student] = []
+    print("採点中...")
+    for stu in student_dir_paths:
+        students.append(Student(stu, settings["tasks"]))
+    with open(path.join(target_dir_path, "result.txt"), "w", encoding="utf-8") as f:
+        for stu in students:
+            stu.get_results()
+            f.write(stu.result)
+    print("採点終了")
 
 
 if __name__ == "__main__":
