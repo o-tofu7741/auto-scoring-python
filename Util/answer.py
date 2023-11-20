@@ -29,28 +29,6 @@ class Answer:
             f"inputs : {self.inputs}\n"
         )
 
-    # def prints(self) -> str:
-    #     return (
-    #         f"{' USER : ' + self.user + ' ':#^70}\n"
-    #         "\n"
-    #         f"FILE LIST : {self.file_list}\n"
-    #         "\n"
-    #         f"{' START CODE ':=^70}\n"
-    #         "\n"
-    #         f"{self.code_txt}\n"
-    #         f"{' FINISH CODE ':=^70}\n"
-    #         "\n"
-    #         f"{' RESULT ' + self.user + ' ':-^70}\n"
-    #         f"{self.result_txt}\n"
-    #     )
-
-    # def get_user_name(self):
-    #     for i in self.file_path.replace("\\", "/").split("/"):
-    #         if "@" in i:
-    #             return i.split("@")[0]
-    #     else:
-    #         return self.file_path
-
     def get_code(self):
         try:
             if self.file_path.endswith((".jar", ".zip")):
@@ -62,7 +40,7 @@ class Answer:
                 with open(self.file_path, encoding=get_encoding_type(self.file_path)) as f:
                     self.code_txt = f.read().strip()
         except Exception as e:
-            self.code_txt = "Open Error : " + self.file_path + "\n手動で確認してくれい"
+            self.code_txt = "Open Error : " + self.file_path + "\n手動で確認してください"
             print(self.file_path, e)
 
     def execute(self):
@@ -103,7 +81,7 @@ def unpack_files(file_path, file_encoding):
                 # print(info.filename)
                 continue  # ディレクトリならスキップ
 
-            if not info.filename.endswith((".java", ".c")):
+            if not info.filename.endswith((".java", ".txt")):
                 # print(info.filename)
                 continue  # .txt 以外のファイルもスキップ
 
